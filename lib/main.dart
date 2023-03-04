@@ -1,178 +1,236 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+// class MyAppBar extends StatelessWidget {
+//   const MyAppBar({required this.title, super.key});
+
+//   // Fields in a Widget subclass are always marked "final".
+
+//   final Widget title;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 56.0, // in logical pixels
+//       padding: const EdgeInsets.symmetric(horizontal: 8.0),
+//       decoration: BoxDecoration(color: Colors.blue[500]),
+//       // Row is a horizontal, linear layout.
+//       child: Row(
+//         children: [
+//           const IconButton(
+//             icon: Icon(Icons.menu),
+//             tooltip: 'Navigation menu',
+//             onPressed: null, // null disables the button
+//           ),
+//           // Expanded expands its child
+//           // to fill the available space.
+//           Expanded(
+//             child: title,
+//           ),
+//           const IconButton(
+//             icon: Icon(Icons.search),
+//             tooltip: 'Search',
+//             onPressed: null,
+//           ),
+//         ],
+//       ),
+//     );r
+//   }
+// }
+
+//start a websocket conection by pressing start game button
+
+// once game created --> all
+
+class MyScaffold extends StatelessWidget {
+  const MyScaffold({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Material is a conceptual piece
+    // of paper on which the UI appears.
+    return Material(
+      // Column is a vertical, linear layout.
+      child: Center(
+        child: Text('Hello, world!'),
+      ),
+    );
+  }
+}
+
+class UsernameStatefulWidget extends StatefulWidget {
+  const UsernameStatefulWidget({super.key});
+
+  @override
+  State<UsernameStatefulWidget> createState() => _UsernameStatefulWidgetState();
+}
+
+class _UsernameStatefulWidgetState extends State<UsernameStatefulWidget> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: 300,
+        child: TextField(
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                  borderSide: BorderSide(width: 15, color: Colors.white),
+                  borderRadius: BorderRadius.circular(50.0)),
+              hintText: 'Find a good name'),
+          controller: _controller,
+          onSubmitted: (String value) async {
+            await showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Thanks!'),
+                  content: Text(
+                      'You typed "$value", which has length ${value.characters.length}.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ));
+  }
+}
+
+class BaseLayout extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(children: [
+        Container(
+            decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/bg-image.jpg"),
+            fit: BoxFit.cover,
+          ),
+        )),
+        Column(
+          children: [
+            SizedBox(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 0),
+                child: Text('BorderLanders',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 60,
+                        fontFamily: 'CloisterBlack')),
+              ),
+            ),
+            Expanded(
+                child: Container(
+                    margin: EdgeInsets.fromLTRB(0, 100, 0, 0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text('KEY IN USERNAME HERE',
+                              style: GoogleFonts.courierPrime(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        UsernameStatefulWidget(),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GameButton('Start game', () {}),
+                              GameButton('Join Room', () {}),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )))
+          ],
+        ),
+      ]),
+    );
+  }
+}
+
+void btnStartGame() {
+  //store name in local storage
+
+  //create a new session with websocket
+
+  //navigate to new page with room code
+}
+
+void btnJoinRoom() {
+  //store name in local storage
+
+  //navigate to page to join room
+}
+
+class GameButton extends StatelessWidget {
+  final String gameLabel;
+  final VoidCallback onButtonClick;
+
+  GameButton(this.gameLabel, this.onButtonClick);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(const TextStyle(
+            fontSize: 20,
+            color: Colors.white60,
+          )),
+          shadowColor: MaterialStateProperty.all(
+            Colors.grey.withOpacity(0.5),
+          ),
+          backgroundColor: MaterialStateProperty.all(Colors.black87),
+          padding: MaterialStateProperty.all(const EdgeInsets.all(20)),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        ),
+        onPressed: onButtonClick,
+        child: Text(gameLabel),
+      ),
+    );
+  }
+}
 
 void main() {
-  runApp(MyApp());
-}
-
-// myapp class extends stateless widget --> elements that you use to build every flutter app
-//app is a widget
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    //to notify others about its own changes,app state modifier
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Wewww',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: MyHomePage(),
+  runApp(
+    MaterialApp(
+      title: 'Borderlanders',
+      theme: ThemeData(
+        fontFamily: 'CourierPrime',
       ),
-    );
-  }
-}
-
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  // ↓ Add the code below.
-  var favorites = <WordPair>[];
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0; // ← Add this property.
-
-  @override
-  Widget build(BuildContext context) {
-    Widget page;
-    switch (selectedIndex) {
-      case 0:
-        page = GeneratorPage();
-        break;
-      case 1:
-        page = Placeholder();
-        break;
-      default:
-        throw UnimplementedError('no widget for $selectedIndex');
-    }
-    return Scaffold(
-      body: Row(
-        children: [
-          SafeArea(
-            child: NavigationRail(
-              extended: true,
-              destinations: [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.favorite),
-                  label: Text('Favorites'),
-                ),
-              ],
-              selectedIndex: selectedIndex, // ← Change to this.
-              onDestinationSelected: (value) {
-                setState(() {
-                  selectedIndex = value;
-                });
-              },
-            ),
-          ),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: page, // ← Here.
-            ),
-          ),
-        ],
+      home: SafeArea(
+        child: BaseLayout(),
       ),
-    );
-  }
-}
-
-class GeneratorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context); // ← Add this.
-    var style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: pair.asPascalCase,
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }
