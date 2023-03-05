@@ -16,6 +16,10 @@ dependencies:
   provider: ^6.0.0
   go_router: ^6.2.0
   google_fonts: ^4.0.3
+  shared_preferences: ^2.0.18
+  web_socket_channel: ^2.3.0
+  animated_text_kit: ^4.2.2
+  pin_code_fields: ^7.4.0
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +31,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/bg-image.jpg
+    - assets/king-of-diamonds-card.png
+    - assets/gray-bg.jpg
+    - assets/fireworks.webp
   fonts:
     - family: CloisterBlack
       fonts:
